@@ -16,6 +16,11 @@ disabled-commands:
   - "version"
   - "icanhasbukkit"
 
+disable-tab-complete:
+  - "ver"
+  - "version"
+  - "icanhasbukkit"
+
 overriden-commands:
   discord: "<gradient:#0BC1FB:#1AFDFD>Social</gradient> <dark_gray>| <gray>Join our community <green>https://discord.gg/digitality"
 

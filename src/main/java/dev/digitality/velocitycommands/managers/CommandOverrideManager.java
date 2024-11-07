@@ -16,6 +16,8 @@ public class CommandOverrideManager {
     private static final HashMap<String, Component> overridenCommands = new HashMap<>();
     @Getter
     private static final List<String> disabledCommands = new ArrayList<>();
+    @Getter
+    private static final List<String> disabledAutocompleteCommands = new ArrayList<>();
 
     @Subscribe
     public void onCommand(CommandExecuteEvent e) {
@@ -39,5 +41,22 @@ public class CommandOverrideManager {
 
             e.setResult(CommandExecuteEvent.CommandResult.denied());
         }
+    }
+
+    @Subscribe
+    public void onTabComplete(CommandExecuteEvent e) {
+        if (!(e.getCommandSource() instanceof Player player))
+            return;
+
+        if (player.hasPermission("velocitycommands.bypass"))
+            return;
+
+        String command = e.getCommand().toLowerCase().split(" ")[0];
+
+        if (command.contains(":") && ConfigManager.getConfig().getBoolean("disable-colon-bypass"))
+            command = command.split(":")[1];
+
+        if (disabledAutocompleteCommands.contains(command))
+            e.setResult(CommandExecuteEvent.CommandResult.denied());
     }
 }

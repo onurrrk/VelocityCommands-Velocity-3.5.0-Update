@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.List;
 
 public class ConfigManager {
     @Getter
@@ -22,9 +23,12 @@ public class ConfigManager {
         CommandOverrideManager.getOverridenCommands().clear();
 
         config = loadConfig("settings.yml");
+        if (!config.contains("disable-tab-complete"))
+            config.set("disable-tab-complete", List.of("ver", "version", "icanhasbukkit"));
 
         ConfigManager.getConfig().getSection("overriden-commands").getKeys().forEach(key -> CommandOverrideManager.getOverridenCommands().put(key.toLowerCase(), ChatUtils.colorize(ConfigManager.getConfig().getString("overriden-commands." + key))));
         CommandOverrideManager.getDisabledCommands().addAll(ConfigManager.getConfig().getStringList("disabled-commands").stream().map(String::toLowerCase).toList());
+        CommandOverrideManager.getDisabledAutocompleteCommands().addAll(ConfigManager.getConfig().getStringList("disable-tab-complete").stream().map(String::toLowerCase).toList());
     }
 
     @Subscribe
